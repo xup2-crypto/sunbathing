@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 3: Sunbathing - Student Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .card-bg { background-color: #161b22; border: 1px solid #21262d; }
+    .inner-card { background-color: #0d1117; border: 1px solid #21262d; }
+    .modal-backdrop { background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
+  </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Header Banner -->
+    <div class="card-bg rounded-2xl p-6 shadow-2xl flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="bg-amber-500/10 text-amber-400 p-3.5 rounded-xl text-3xl">
+          <i class="fa-solid fa-sun"></i>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-3">
+            <h1 class="text-2xl font-bold text-white tracking-tight">单元3: 晒太阳 <span class="text-gray-400 font-normal">/ Unit 3: Sunbathing</span></h1>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full">
+              班级: 5.3 / Class 5.3
+            </span>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 实时同步中 / Live Synced
+            </span>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">学生自主选择板 / Student Choice Board</p>
+        </div>
+      </div>
+
+      <div class="px-4 py-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-xl font-bold text-xs flex items-center gap-2 shadow-sm">
+        <i class="fa-solid fa-user-graduate"></i> 学生个人版 / Student View
+      </div>
+    </div>
+
+    <!-- Student Info & Badge Card -->
+    <div class="card-bg rounded-2xl p-6 space-y-6 shadow-xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-800">
+        <div>
+          <div class="text-xs text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1 mb-1">
+            <i class="fa-solid fa-graduation-cap"></i> 学生自主学习管理 / Student Learning Mode
+          </div>
+          <h2 id="studentTitle" class="text-2xl font-black text-white">当前学习者: 学生 01 (5.3)</h2>
+          <p class="text-xs text-gray-400 mt-1">提示: 每位同学只能勾选更新自己的学习任务！ / Only edit your own tasks.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="bg-gray-800/80 border border-gray-700 px-3 py-2 rounded-xl flex items-center gap-2">
+            <i class="fa-solid fa-user-gear text-gray-400 text-xs"></i>
+            <span class="text-xs text-gray-400 font-medium">选择/修改姓名 / Select Name:</span>
+            <select id="studentSelect" onchange="onStudentSelectChange()" class="bg-transparent text-amber-400 font-bold text-xs focus:outline-none cursor-pointer">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <button onclick="openModal()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2">
+            <i class="fa-solid fa-award"></i> 展示成就卡 (给家长看) / Present Certificate
+          </button>
+        </div>
+      </div>
+
+      <!-- Unlocked Badges Row -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-star text-amber-400"></i> 我已解锁的成就勋章 / MY UNLOCKED BADGES
+          </span>
+          <span id="badgeCountText" class="text-xs font-bold text-amber-400">已解锁 0 / 6 个勋章</span>
+        </div>
+        
+        <div id="badgeContainer" class="flex flex-wrap items-center gap-3 min-h-[48px] p-3 inner-card rounded-xl">
+          <span class="text-xs text-gray-500 italic">勾选下方任务即可解锁大勋章！ / Complete tasks below to unlock badges!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 Tasks Choice Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Task 1 -->
+      <div class="card-bg rounded-2xl p-5 space-y-4 shadow-lg">
+        <div class="flex items-center gap-3 border-b border-gray-800 pb-3">
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl text-lg"><i class="fa-solid fa-pen-ruler"></i></div>
+          <div>
+            <h3 class="font-bold text-white text-sm">任务 1: 做练习</h3>
+            <p class="text-xs text-gray-400">Task 1: Do Exercises</p>
+            <p class="text-[11px] text-amber-400 mt-0.5">可获勋章: 🏋️ 练习达人</p>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t1_mon')" id="st_t1_mon" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">星期一练习</div>
+              <div class="text-[10px] text-gray-400">Monday</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t1_tue')" id="st_t1_tue" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">星期二练习</div>
+              <div class="text-[10px] text-gray-400">Tuesday</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t1_wed')" id="st_t1_wed" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">星期三练习</div>
+              <div class="text-[10px] text-gray-400">Wednesday</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t1_thu')" id="st_t1_thu" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">星期四练习</div>
+              <div class="text-[10px] text-gray-400">Thursday</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t1_fri')" id="st_t1_fri" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">星期五练习</div>
+              <div class="text-[10px] text-gray-400">Friday</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Task 2 -->
+      <div class="card-bg rounded-2xl p-5 space-y-4 shadow-lg">
+        <div class="flex items-center gap-3 border-b border-gray-800 pb-3">
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl text-lg"><i class="fa-solid fa-book-open"></i></div>
+          <div>
+            <h3 class="font-bold text-white text-sm">任务 2: 阅读</h3>
+            <p class="text-xs text-gray-400">Task 2: Reading</p>
+            <p class="text-[11px] text-amber-400 mt-0.5">可获勋章: 📖 悦读之星</p>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t2_1')" id="st_t2_1" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">阅读《太阳和彩虹》</div>
+              <div class="text-[10px] text-gray-400">"The Sun and the Rainbow"</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t2_2')" id="st_t2_2" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">阅读《太阳和北风》</div>
+              <div class="text-[10px] text-gray-400">"The Sun and the North Wind"</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Task 3 -->
+      <div class="card-bg rounded-2xl p-5 space-y-4 shadow-lg">
+        <div class="flex items-center gap-3 border-b border-gray-800 pb-3">
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl text-lg"><i class="fa-solid fa-feather"></i></div>
+          <div>
+            <h3 class="font-bold text-white text-sm">任务 3: 仿写诗《晒太阳》</h3>
+            <p class="text-xs text-gray-400">Task 3: Poem Writing (选做1-2首)</p>
+            <p class="text-[11px] text-amber-400 mt-0.5">可获勋章: ✍️ 诗意小作家</p>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t3_1')" id="st_t3_1" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">《春风吹》</div>
+              <div class="text-[10px] text-gray-400">"Spring Wind Blows"</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t3_2')" id="st_t3_2" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">《下雨了》</div>
+              <div class="text-[10px] text-gray-400">"It Rains"</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t3_3')" id="st_t3_3" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">《下雪了》</div>
+              <div class="text-[10px] text-gray-400">"It Snows"</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t3_4')" id="st_t3_4" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">《云儿飘》</div>
+              <div class="text-[10px] text-gray-400">"Clouds Drifting"</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Task 4 -->
+      <div class="card-bg rounded-2xl p-5 space-y-4 shadow-lg">
+        <div class="flex items-center gap-3 border-b border-gray-800 pb-3">
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl text-lg"><i class="fa-solid fa-brain"></i></div>
+          <div>
+            <h3 class="font-bold text-white text-sm">任务 4: 读后感</h3>
+            <p class="text-xs text-gray-400">Task 4: Reading Reflections</p>
+            <p class="text-[11px] text-amber-400 mt-0.5">可获勋章: 💡 深度思考者</p>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t4_1')" id="st_t4_1" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">《太阳和彩虹》读后感</div>
+              <div class="text-[10px] text-gray-400">Reflection: Sun & Rainbow</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t4_2')" id="st_t4_2" class="w-4 h-4 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <div>
+              <div class="text-xs text-gray-200 font-medium">《太阳和北风》读后感</div>
+              <div class="text-[10px] text-gray-400">Reflection: Sun & North Wind</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Task 5 -->
+      <div class="card-bg rounded-2xl p-5 space-y-4 shadow-lg md:col-span-2 lg:col-span-2">
+        <div class="flex items-center gap-3 border-b border-gray-800 pb-3">
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl text-lg"><i class="fa-solid fa-stairs"></i></div>
+          <div>
+            <h3 class="font-bold text-white text-sm">任务 5: 阶梯阅读 (1 - 10 阶)</h3>
+            <p class="text-xs text-gray-400">Task 5: Stepped Reading (Levels 1 to 10)</p>
+            <p class="text-[11px] text-amber-400 mt-0.5">可获勋章: 🚀 阶梯阅读达人 (完成5阶或以上)</p>
+          </div>
+        </div>
+        <div id="t5Container" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Parent Certificate Modal -->
+  <div id="certModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50">
+    <div class="card-bg border-2 border-amber-500/50 rounded-3xl p-6 max-w-md w-full text-center relative shadow-2xl space-y-5">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="space-y-1">
+        <div class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-bold rounded-full border border-amber-500/30">
+          🎓 学习成果展示卡 / Presentation Card
+        </div>
+        <h3 id="modalTitle" class="text-2xl font-black text-white">学生 01 (5.3)</h3>
+        <p class="text-xs text-gray-400">单元3：晒太阳 / Unit 3: Sunbathing</p>
+      </div>
+
+      <div id="modalBadgesContainer" class="grid grid-cols-2 gap-3 py-2"></div>
+
+      <div class="p-3 bg-gray-900 rounded-xl border border-gray-800 text-xs text-amber-300">
+        💡 提示：你可以截图发送给爸爸妈妈分享你的学习喜悦！
+      </div>
+
+      <button onclick="closeModal()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-gray-950 font-black rounded-xl transition text-sm">
+        返回我的学习板 / Back to Board
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const BADGES = {
+      ex_master: { name: '练习达人', icon: '🏋️', desc: '完成至少3天每日练习', bg: 'from-blue-600 to-indigo-800' },
+      read_star: { name: '悦读之星', icon: '📖', desc: '完成全部课文阅读', bg: 'from-emerald-600 to-teal-800' },
+      poet: { name: '诗意小作家', icon: '✍️', desc: '完成仿写诗创作', bg: 'from-purple-600 to-pink-800' },
+      thinker: { name: '深度思考者', icon: '💡', desc: '完成阅读读后感', bg: 'from-amber-500 to-orange-700' },
+      step_master: { name: '阶梯阅读达人', icon: '🚀', desc: '完成5阶或以上阶梯阅读', bg: 'from-teal-600 to-cyan-800' },
+      sun_champion: { name: '太阳全能王', icon: '☀️', desc: '解锁全部学习领域', bg: 'from-yellow-500 to-amber-600' }
+    };
+
+    const broadcast = new BroadcastChannel('class53_sync_channel');
+    let activeStudent = '学生 01';
+
+    function initT5() {
+      const c = document.getElementById('t5Container');
+      c.innerHTML = '';
+      for(let i=1; i<=10; i++){
+        c.innerHTML += `
+          <label class="flex items-center gap-2 p-2.5 inner-card hover:border-gray-700 rounded-xl cursor-pointer transition">
+            <input type="checkbox" onchange="toggleTask('t5_${i}')" id="st_t5_${i}" class="w-3.5 h-3.5 text-amber-500 rounded bg-gray-900 border-gray-700 cursor-pointer">
+            <span class="text-xs text-gray-200">第 ${i} 阶</span>
+          </label>
+        `;
+      }
+    }
+
+    function initDropdown() {
+      const sel = document.getElementById('studentSelect');
+      sel.innerHTML = '';
+      for (let i = 1; i <= 30; i++) {
+        const num = i < 10 ? `0${i}` : `${i}`;
+        const name = `学生 ${num}`;
+        sel.innerHTML += `<option value="${name}">${name} (5.3)</option>`;
+      }
+      activeStudent = sel.value;
+    }
+
+    function getStore() {
+      return JSON.parse(localStorage.getItem('unit3_class53_data') || '{}');
+    }
+
+    function saveStore(data) {
+      localStorage.setItem('unit3_class53_data', JSON.stringify(data));
+      broadcast.postMessage({ type: 'update' });
+      render();
+    }
+
+    function calculateBadges(tasks) {
+      let earned = [];
+      const exCount = tasks.filter(t => t.startsWith('t1_')).length;
+      if (exCount >= 3) earned.push(BADGES.ex_master);
+
+      if (tasks.includes('t2_1') && tasks.includes('t2_2')) earned.push(BADGES.read_star);
+      if (tasks.some(t => t.startsWith('t3_'))) earned.push(BADGES.poet);
+      if (tasks.some(t => t.startsWith('t4_'))) earned.push(BADGES.thinker);
+
+      const stepCount = tasks.filter(t => t.startsWith('t5_')).length;
+      if (stepCount >= 5) earned.push(BADGES.step_master);
+
+      if (exCount >= 3 && tasks.includes('t2_1') && tasks.some(t => t.startsWith('t3_')) && tasks.some(t => t.startsWith('t4_')) && stepCount >= 3) {
+        earned.push(BADGES.sun_champion);
+      }
+      return earned;
+    }
+
+    function toggleTask(taskId) {
+      const db = getStore();
+      let tasks = db[activeStudent] || [];
+      if (tasks.includes(taskId)) {
+        tasks = tasks.filter(t => t !== taskId);
+      } else {
+        tasks.push(taskId);
+      }
+      db[activeStudent] = tasks;
+      saveStore(db);
+    }
+
+    function onStudentSelectChange() {
+      activeStudent = document.getElementById('studentSelect').value;
+      render();
+    }
+
+    function render() {
+      const store = getStore();
+      const tasks = store[activeStudent] || [];
+
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const key = cb.id.replace('st_', '');
+        cb.checked = tasks.includes(key);
+      });
+
+      document.getElementById('studentTitle').innerText = `当前学习者: ${activeStudent} (5.3)`;
+
+      const badges = calculateBadges(tasks);
+      const container = document.getElementById('badgeContainer');
+      document.getElementById('badgeCountText').innerText = `已解锁 ${badges.length} / 6 个勋章`;
+      container.innerHTML = '';
+
+      if (badges.length === 0) {
+        container.innerHTML = `<span class="text-xs text-gray-500 italic">勾选下方任务即可解锁大勋章！ / Complete tasks below to unlock badges!</span>`;
+      } else {
+        badges.forEach(b => {
+          container.innerHTML += `
+            <div onclick="openModal()" class="px-3 py-1.5 bg-gradient-to-r ${b.bg} rounded-xl border border-white/20 text-white flex items-center gap-2 cursor-pointer hover:scale-105 transition shadow-lg">
+              <span class="text-base">${b.icon}</span>
+              <span class="text-xs font-bold">${b.name}</span>
+            </div>
+          `;
+        });
+      }
+    }
+
+    function openModal() {
+      const tasks = (getStore())[activeStudent] || [];
+      const badges = calculateBadges(tasks);
+      const c = document.getElementById('modalBadgesContainer');
+      document.getElementById('modalTitle').innerText = `${activeStudent} (5.3)`;
+      c.innerHTML = '';
+
+      if (badges.length === 0) {
+        c.innerHTML = `<div class="col-span-2 py-6 text-gray-400 text-xs">还没有获得勋章，快去勾选完成的任务吧！</div>`;
+      } else {
+        badges.forEach(b => {
+          c.innerHTML += `
+            <div class="bg-gradient-to-br ${b.bg} p-3 rounded-2xl border border-white/20 text-white flex flex-col items-center justify-center space-y-1 shadow-lg">
+              <div class="text-3xl">${b.icon}</div>
+              <div class="font-black text-xs">${b.name}</div>
+              <div class="text-[10px] text-gray-200 opacity-90">${b.desc}</div>
+            </div>
+          `;
+        });
+      }
+      document.getElementById('certModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('certModal').classList.add('hidden');
+    }
+
+    broadcast.onmessage = (e) => { if (e.data.type === 'update') render(); };
+    window.addEventListener('storage', () => render());
+
+    initT5();
+    initDropdown();
+    render();
+  </script>
+</body>
+</html>
